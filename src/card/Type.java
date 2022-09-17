@@ -7,5 +7,6 @@ public enum Type {
     KNIGHT,
     KRAKEN,
     ELV,
+    ORK,
     SPELL
 }

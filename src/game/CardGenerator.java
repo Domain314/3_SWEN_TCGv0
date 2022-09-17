@@ -5,6 +5,9 @@ import card.Element;
 import card.Type;
 import util.Constants;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CardGenerator {
     static String[] cardNamePrefix = {
             "Enhanced", "Ominous", "Vicious", "Diabolic", "Exalted", "Celestial", "Dark", "Radiant", "Chaotic",
@@ -33,6 +36,7 @@ public class CardGenerator {
             case KNIGHT: return "Knight";
             case KRAKEN: return "Kraken";
             case ELV: return "Elv";
+            case ORK: return "Ork";
             case SPELL: return "Spell";
             default: return "";
         }
@@ -51,6 +55,7 @@ public class CardGenerator {
             case 3: return Type.KNIGHT;
             case 4: return Type.KRAKEN;
             case 5: return Type.ELV;
+            case 6: return Type.ORK;
             default: return Type.SPELL;
         }
     }
@@ -58,8 +63,8 @@ public class CardGenerator {
     private static Element getRandomElement() {
         int rnd = Constants.RANDOM.nextInt(Constants.RANDOM_ELEMENT_CHANCE);
         switch (rnd) {
-            case 0: return Element.WATER;
-            case 1: return Element.FIRE;
+            case 0: return Element.FIRE;
+            case 1: return Element.WATER;
             case 2: return Element.ICE;
             case 3: return Element.WIND;
             default: return Element.NORMAL;
@@ -78,6 +83,14 @@ public class CardGenerator {
         int rndDamage = getRandomDamage();
 
         return new Card(rndID, rndName, "descr", rndDamage, rndType, rndElement);
+    }
+    
+    public static List<Card> generatePackage() {
+        List<Card> pack = new ArrayList<>();
+        for (int i = 0; i < Constants.CARDS_PER_PACKAGE; i++) {
+            pack.add(generateRandomCard());
+        }
+        return pack;
     }
 
 }

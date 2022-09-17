@@ -1,6 +1,7 @@
 package overseer;
 
 import card.Card;
+import game.Game;
 import user.User;
 
 import java.util.ArrayList;
@@ -13,11 +14,15 @@ public class Overseer {
     static Map<Integer,Card> allCardsMap = new HashMap<>();
     static List<User> allUsers = new ArrayList<>();
     static Map<Integer,User> allUsersMap = new HashMap<>();
+    static List<Game> allGames = new ArrayList<>();
+    static Map<Integer,Game> allGamesMap = new HashMap<>();
 
     public static List<Card> getAllCards() { return allCards; }
     public static Card getCard(int id) { return allCardsMap.get(id); }
     public static List<User> getAllUsers() { return allUsers; }
     public static User getUser(int id) { return allUsersMap.get(id); }
+    public static List<Game> getAllGames() { return allGames; }
+    public static Game getGame(int id) { return allGamesMap.get(id); }
 
     public static void addCard(Card card) {
         allCards.add(card);
@@ -29,4 +34,8 @@ public class Overseer {
         allUsersMap.put(user.getID(), user);
     }
 
+    public static void addGame(Game game) {
+        allGames.add(game);
+        allGamesMap.put(game.getID(), game);
+    }
 }

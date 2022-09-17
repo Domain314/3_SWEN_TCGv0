@@ -22,7 +22,5 @@ public class Card {
         this.damage = damage;
         this.type = type;
         this.element = element;
-
-        System.out.println("new card created");
     }
 }

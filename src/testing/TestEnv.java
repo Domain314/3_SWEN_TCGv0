@@ -1,7 +1,6 @@
 package testing;
 
 import card.Card;
-import card.Collection;
 import game.CardGenerator;
 import game.Game;
 import overseer.Overseer;
@@ -32,12 +31,14 @@ public class TestEnv {
             "123", "314", "3060", "360", "720", "1080", "007", "001", "1", "2", "3", "666", "999", "69", "6969",
             "2020", "2021", "2022", "3000", "4000", "5000", "6000", "9000", "2050"};
 
+//    Generate random NPC name, out of prefix, suffix and a number.
     public String randomName() {
         return playerNamesPrefixes[Constants.RANDOM.nextInt(playerNamesPrefixes.length)] +
                 playerNamesSuffixes[Constants.RANDOM.nextInt(playerNamesSuffixes.length)] +
                 playerNums[Constants.RANDOM.nextInt(playerNums.length)];
     }
 
+//    Initialize TestEnv,run n-simulations and display result.
     public TestEnv() {
         initTestEnv();
         for (int i = 0; i < simulationsAmount; i++) {
@@ -46,11 +47,13 @@ public class TestEnv {
         displayResults();
     }
 
+//    Initialize TestEnv
     private void initTestEnv() {
         genUsers();
         System.out.println("User generation done");
     }
 
+//    Generate Users and generate Cards for their stack
     private void genUsers() {
         for (int i = 0; i < userAmount; i++) {
             User newUser = new User(1234 + i, 0, 0, 1500, randomName(), "abc123", 200);
@@ -63,6 +66,7 @@ public class TestEnv {
         }
     }
 
+//    get 2 random Player, prepare their Decks (take 4 Cards from Stack) and run the game.
     private void simulateGames() {
         List<Player> players = new ArrayList<>();
         for (int i = 0; i < 2; i++) {
@@ -76,10 +80,12 @@ public class TestEnv {
         }
     }
 
+//    Choose a random player
     private Player getRandomPlayer() {
         return Overseer.getAllUsers().get(Constants.RANDOM.nextInt(Overseer.getAllUsers().size()));
     }
 
+//    prepare Decks for both players
     private void preparePlayers(List<Player> players) {
         for (int i = 0; i < players.size(); i++) {
             if (players.get(i).getDeck().getCards().size() != Constants.CARDS_PER_DECK) {
@@ -88,6 +94,7 @@ public class TestEnv {
         }
     }
 
+//    Check all cards in stack and choose only the best for the deck
     private void chooseBestCardsForDeck(Player player) {
         List<Card> deck = player.getDeck().getCards();
         List<Card> stack = player.getStack().getCards();
@@ -117,15 +124,16 @@ public class TestEnv {
             }
             deck.add(stack.remove(highestIndex));
         }
-
     }
 
+//    Make Rounds, until the game is over.
     private void runGame(Game newGame) {
         while(newGame.getIsActive()) {
             newGame.makeRound();
         }
     }
 
+//    Log all results
     private void displayResults() {
         Collections.sort(Overseer.getAllUsers());
         List<User> users = Overseer.getAllUsers();

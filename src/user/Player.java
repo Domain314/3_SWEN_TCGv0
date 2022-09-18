@@ -31,10 +31,13 @@ public class Player {
     public String getUserName() { return getUserName(); }
 
     public void changeElo(int eloAmount) { elo += eloAmount; }
+
+//    End game after losing (change elo and increment games counter)
     public void endGame(int eloAmount) {
         changeElo(eloAmount);
         gamesCounter++;
     }
+//    End game after winning (change elo, increment games and win counter)
     public void endGame(int eloAmount, boolean win) {
         changeElo(eloAmount);
         gamesCounter++;

@@ -24,9 +24,11 @@ public class Constants {
             {0.75f, 0.75f, 0.75f, 0.75f, 1.0f},
     };
 
+//    return amount of elo-change, based on winner and loser rating
     public static int EloChange(float ratingWinner, float ratingLoser) {
         return (int)(ELO_CONSTANT * (1 - probability(ratingLoser, ratingWinner)));
     }
+//    calculate win-probability for elo-calculation
     private static float probability(float rating1, float rating2) {
         return 1.0f / (1 + (float) (Math.pow(10, (rating1 - rating2) / 400)));
     }

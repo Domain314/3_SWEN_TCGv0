@@ -12,6 +12,7 @@ abstract public class Collection {
 
     public List<Card> getCards() { return cards; }
 
+//    Add one Card or List of Cards.
     public void addCard(Card card) {
         this.cards.add(card);
     }

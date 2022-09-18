@@ -19,9 +19,10 @@ public class User extends Player implements Comparable<User>{
     public String getSessionID() { return sessionID; }
     public int getCredits() { return credits; }
 
+//    return false, if not enough credits, to subtract.
     public boolean changeCredits(int amount) {
-        if (amount > credits) { return false; }
-        credits -= amount;
+        if (credits + amount < 0) { return false; }
+        credits += amount;
         return true;
     }
 

@@ -1,9 +1,6 @@
 package card;
 import util.Constants;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Deck extends Collection implements IPlayable{
     @Override
     public Card drawCard() {
@@ -12,8 +9,6 @@ public class Deck extends Collection implements IPlayable{
     }
 
     @Override
-    public void shuffleCards() {
-        System.out.println("shuffle...");
-    }
+    public void shuffleCards() { System.out.println("shuffle..."); }
 
 }

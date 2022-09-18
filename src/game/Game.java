@@ -26,12 +26,16 @@ public class Game {
     public int getRound() { return round; }
     public boolean getIsActive() { return isActive; }
 
+//    If limit of rounds is reached, return false (end game), else increment "round" and return true
     private boolean addRound() {
         if (round+1 >= Constants.MAX_ROUNDS_PER_GAME) { return false; }
         round++;
         return true;
     }
 
+//    If one player has lost the game and finalize it.
+//    Else if limit of rounds reached, end the game and finalize it.
+//    Else continue to roundPhase1
     public void makeRound() {
         int loser = checkLoser();
         if (loser != -1) {
@@ -55,6 +59,9 @@ public class Game {
         roundPhase1();
     }
 
+//    Each Player draws a random card from Deck.
+//    If a specialEventResult == -1, continue to roundPhase2 (no special Event)
+//    Else end round (special event occurred and winnerIndex was returned)
     private void roundPhase1() {
         List<Card> drawnCards = new ArrayList<>();
         for (int i = 0; i < players.size(); i++) {
@@ -68,6 +75,9 @@ public class Game {
         else endRound(specialEventResult, drawnCards);
     }
 
+//    Check if one of the special events occurred.
+//    Yes => return winning playerIndex.
+//    No => return -1
     private int checkSpecialEvents(List<Card> drawnCards) {
         Type typeA = drawnCards.get(0).getType();
         Type typeB = drawnCards.get(1).getType();
@@ -84,6 +94,8 @@ public class Game {
         return -1;
     }
 
+//    Caluclate elemental Damage and end round.
+//    damageA - damageB => negative result = A smaller || => positive result = A greater || => result 0 = draw.
     private void roundPhase2(List<Card> drawnCards) {
 
         System.out.println(String.format("> %d  --  %d  Normal Damage", drawnCards.get(0).getDamage(), drawnCards.get(1).getDamage()));
@@ -100,18 +112,21 @@ public class Game {
         }
     }
 
+//    If winnerIndex == -1 => Draw.
+//    Else transfer all cards to winner Stack
     private void endRound(int winnerIndex, List<Card> drawnCards) {
         if (winnerIndex == -1) {
             System.out.println(String.format("Draw. %s + %s", drawnCards.get(0).getCardName(), drawnCards.get(1).getCardName()));
             players.get(0).getDeck().addCard(drawnCards.get(0));
             players.get(1).getDeck().addCard(drawnCards.get(1));
         } else {
-            players.get(winnerIndex).getDeck().addCard(drawnCards);
+            players.get(winnerIndex).getStack().addCard(drawnCards);
             System.out.println(String.format("Player %d won the round.", winnerIndex));
         }
         System.out.println("--------");
     }
 
+//    Check if one of the player has no cards left. return index of loser or -1 if everyone has at least one card left.
     private int checkLoser() {
         for (int i = 0; i < players.size(); i++) {
             if (players.get(i).getDeck().getCards().size() <= 0) {
@@ -121,11 +136,13 @@ public class Game {
         return -1;
     }
 
+//    Get multiplicator from ELEMENT_MATRIX and multiply with damage
     private int calculateElementalDamage(Card cardA, Card cardB) {
         float multiplicator = Constants.ELEMENT_MATRIX[castEleToInt(cardA.getElement())][castEleToInt(cardB.getElement())];
         return (int)(cardA.getDamage() * multiplicator);
     }
 
+//    Get amount of elo Change and add/subtract from each player.
     private void finalizeGame(int loserIndex) {
         int eloChange = loserIndex == -1 ? 0 : Constants.EloChange(players.get((loserIndex+1)%2).getElo(), players.get(loserIndex).getElo());
 
@@ -139,6 +156,7 @@ public class Game {
         System.out.println("------------------------");
     }
 
+//    transform enum to num
     private int castEleToInt(Element element) {
         switch (element) {
             case FIRE: return 0;

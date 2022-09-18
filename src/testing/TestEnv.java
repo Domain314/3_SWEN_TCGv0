@@ -1,6 +1,7 @@
 package testing;
 
 import card.Card;
+import card.Collection;
 import game.CardGenerator;
 import game.Game;
 import overseer.Overseer;
@@ -9,16 +10,40 @@ import user.User;
 import util.Constants;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class TestEnv {
-    int userAmount = 2;
+    int userAmount = 10;
     int cardsPerStack = 20;
-    int testGamesMax = 30;
+    int testGamesMax = 1;
+    int simulationsAmount = 1000;
+
+    static String[] playerNamesPrefixes = {
+            "Frog", "Dr", "Th3", "MindOf", "Kev", "Captain", "Edge", "Kohlrabi", "Alcohol", "Master", "Angel", "Killer",
+            "Milf", "Clumsy", "Lucky", "Wild", "Warped", "Sniper", "Liquid", "Thanos", "Enko", "Crimson", "Weed", "Greedy",
+            "Last", "Imaginary", "Manic", "Kendal", "RickN", "Edgy", "Drogo", "Atom", "Snap", "Web", "The", "Lost"};
+    static String[] playerNamesSuffixes = {
+            "Milk", "Caring", "Th30d0r3", "Kevin", "K3v1n", "Smart", "Carmin", "Scare", "Squirrel", "Tolkien",
+            "Diet", "Offensively", "Wild", "Sheriff", "German", "Kiyoshi", "Thanos", "Destroyer", "Maniac",
+            "Life", "Image", "Flux", "NMorty", "Morty", "Karen", "Doggo", "A", "B", "Master", "Slayer"};
+    static String[] playerNums = {
+            "420", "80", "81", "82", "83", "84", "85", "86", "87","88", "89", "90", "91", "92", "93", "94", "95", "96", "97", "98", "99",
+            "123", "314", "3060", "360", "720", "1080", "007", "001", "1", "2", "3", "666", "999", "69", "6969",
+            "2020", "2021", "2022", "3000", "4000", "5000", "6000", "9000", "2050"};
+
+    public String randomName() {
+        return playerNamesPrefixes[Constants.RANDOM.nextInt(playerNamesPrefixes.length)] +
+                playerNamesSuffixes[Constants.RANDOM.nextInt(playerNamesSuffixes.length)] +
+                playerNums[Constants.RANDOM.nextInt(playerNums.length)];
+    }
 
     public TestEnv() {
         initTestEnv();
-        simulateGames();
+        for (int i = 0; i < simulationsAmount; i++) {
+            simulateGames();
+        }
+        displayResults();
     }
 
     private void initTestEnv() {
@@ -28,7 +53,7 @@ public class TestEnv {
 
     private void genUsers() {
         for (int i = 0; i < userAmount; i++) {
-            User newUser = new User(1234 + i, 0, 0, 1500, String.format("Player%d", i), "abc123", 420);
+            User newUser = new User(1234 + i, 0, 0, 1500, randomName(), "abc123", 200);
             for (int j = 0; j < cardsPerStack; j++) {
                 Card newCard = CardGenerator.generateRandomCard();
                 Overseer.addCard(newCard);
@@ -40,8 +65,8 @@ public class TestEnv {
 
     private void simulateGames() {
         List<Player> players = new ArrayList<>();
-        for (int i = 0; i < userAmount; i++) {
-            players.add(Overseer.getAllUsers().get(i));
+        for (int i = 0; i < 2; i++) {
+            players.add(getRandomPlayer());
         }
         for (int i = 0; i < testGamesMax; i++) {
             preparePlayers(players);
@@ -49,6 +74,10 @@ public class TestEnv {
             Overseer.addGame(newGame);
             runGame(newGame);
         }
+    }
+
+    private Player getRandomPlayer() {
+        return Overseer.getAllUsers().get(Constants.RANDOM.nextInt(Overseer.getAllUsers().size()));
     }
 
     private void preparePlayers(List<Player> players) {
@@ -94,6 +123,21 @@ public class TestEnv {
     private void runGame(Game newGame) {
         while(newGame.getIsActive()) {
             newGame.makeRound();
+        }
+    }
+
+    private void displayResults() {
+        Collections.sort(Overseer.getAllUsers());
+        List<User> users = Overseer.getAllUsers();
+        for (int i = 0; i < users.size(); i++) {
+            System.out.println(String.format(
+                    "%d. %d - %d/%d - %s",
+                    i+1,
+                    users.get(i).getElo(),
+                    users.get(i).getWinCounter(),
+                    users.get(i).getGamesCounter(),
+                    users.get(i).getUserName())
+            );
         }
     }
 }

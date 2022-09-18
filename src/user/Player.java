@@ -28,6 +28,7 @@ public class Player {
     public int getWinCounter() { return winCounter; }
     public Deck getDeck() { return deck; }
     public Stack getStack() { return stack; }
+    public String getUserName() { return getUserName(); }
 
     public void changeElo(int eloAmount) { elo += eloAmount; }
     public void endGame(int eloAmount) {

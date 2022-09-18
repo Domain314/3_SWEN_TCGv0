@@ -2,7 +2,7 @@ package user;
 
 import card.Stack;
 
-public class User extends Player{
+public class User extends Player implements Comparable<User>{
     String userName;
     String sessionID;
     int credits;
@@ -23,5 +23,10 @@ public class User extends Player{
         if (amount > credits) { return false; }
         credits -= amount;
         return true;
+    }
+
+    @Override
+    public int compareTo(User user) {
+        return user.getElo() - this.getElo();
     }
 }

@@ -35,7 +35,7 @@ public class Game {
     public void makeRound() {
         int loser = checkLoser();
         if (loser != -1) {
-            System.out.println(String.format("Loser: %s - Rounds: %d", Overseer.getUser(players.get(loser).getID()).getUserName(), round ));
+            System.out.println(String.format("Winner: %s - Rounds: %d", Overseer.getUser(players.get((loser+1)%2).getID()).getUserName(), round ));
             isActive = false;
             finalizeGame(loser);
             return;
@@ -61,6 +61,7 @@ public class Game {
             drawnCards.add(players.get(i).getDeck().drawCard());
         }
 
+        System.out.println(String.format("%s -VS- %s", drawnCards.get(0).getCardName(), drawnCards.get(1).getCardName()));
 
         int specialEventResult = checkSpecialEvents(drawnCards);
         if (specialEventResult == -1) roundPhase2(drawnCards);
@@ -85,12 +86,12 @@ public class Game {
 
     private void roundPhase2(List<Card> drawnCards) {
 
-        System.out.println(String.format("Player 0: %d  --  Player 1: %d", drawnCards.get(0).getDamage(), drawnCards.get(1).getDamage()));
+        System.out.println(String.format("> %d  --  %d  Normal Damage", drawnCards.get(0).getDamage(), drawnCards.get(1).getDamage()));
 
         int damageA = calculateElementalDamage(drawnCards.get(0), drawnCards.get(1));
         int damageB = calculateElementalDamage(drawnCards.get(1), drawnCards.get(0));
 
-        System.out.println(String.format("Player 0: %d  --  Player 1: %d", damageA, damageB));
+        System.out.println(String.format("> %d  --  %d  Elemental Damage", damageA, damageB));
 
         switch (Integer.signum(damageA - damageB)) {
             case 1: endRound(0, drawnCards); break;
@@ -106,8 +107,9 @@ public class Game {
             players.get(1).getDeck().addCard(drawnCards.get(1));
         } else {
             players.get(winnerIndex).getDeck().addCard(drawnCards);
-            System.out.println(String.format("Player %d won the round. %s + %s", winnerIndex, drawnCards.get(0).getCardName(), drawnCards.get(1).getCardName()));
+            System.out.println(String.format("Player %d won the round.", winnerIndex));
         }
+        System.out.println("--------");
     }
 
     private int checkLoser() {
@@ -133,7 +135,7 @@ public class Game {
             case 1: players.get(0).endGame(eloChange, true); players.get(1).endGame(-eloChange); break;
         }
 
-        System.out.println(String.format("Player0 rating: %d\nPlayer1 rating: %d", players.get(0).getElo(), players.get(1).getElo()));
+        System.out.println(String.format("%s rating: %d\n%s rating: %d", players.get(0).getUserName(), players.get(0).getElo(), players.get(1).getUserName(), players.get(1).getElo()));
         System.out.println("------------------------");
     }
 

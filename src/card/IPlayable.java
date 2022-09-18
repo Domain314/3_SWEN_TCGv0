@@ -1,6 +1,6 @@
 package card;
 
-public interface Playable {
+public interface IPlayable {
     Card drawCard();
     void shuffleCards();
 }

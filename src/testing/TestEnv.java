@@ -1,8 +1,6 @@
 package testing;
 
 import card.Card;
-import card.Deck;
-import card.Stack;
 import game.CardGenerator;
 import game.Game;
 import overseer.Overseer;
@@ -65,6 +63,12 @@ public class TestEnv {
         List<Card> deck = player.getDeck().getCards();
         List<Card> stack = player.getStack().getCards();
 
+        if (deck.size() > Constants.CARDS_PER_DECK) {
+            for (int i = deck.size() - 1 ; i >= 0 ; i--) {
+                stack.add(deck.remove(i));
+            }
+        }
+
         if (stack.size() < Constants.CARDS_PER_DECK) {
             player.getStack().addCard(CardGenerator.generatePackage());
         }
@@ -79,7 +83,7 @@ public class TestEnv {
                 }
             }
             if (highestIndex == -1) {
-                System.out.println("something went wrong. abort round");
+                System.out.println("something went wrong. abort choosing cards");
                 return;
             }
             deck.add(stack.remove(highestIndex));

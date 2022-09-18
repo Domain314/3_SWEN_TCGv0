@@ -37,14 +37,21 @@ public class Game {
         if (loser != -1) {
             System.out.println(String.format("Loser: %s - Rounds: %d", Overseer.getUser(players.get(loser).getID()).getUserName(), round ));
             isActive = false;
+            finalizeGame(loser);
             return;
         }
         if (!addRound()) {
             System.out.println("Limit of rounds reached! \nDraw.");
+            System.out.println(String.format(
+                    "Player 0 had %d cards. Player 1 had %d cards",
+                    players.get(0).getDeck().getCards().size(),
+                    players.get(1).getDeck().getCards().size())
+            );
             isActive = false;
+            finalizeGame(-1);
             return;
         }
-        System.out.println("make round.." + round);
+        System.out.println(String.format("Round %d", round));
         roundPhase1();
     }
 
@@ -54,51 +61,54 @@ public class Game {
             drawnCards.add(players.get(i).getDeck().drawCard());
         }
 
-        int specialEventResult = checkSpecialEvents(drawnCards.get(0), drawnCards.get(1));
+
+        int specialEventResult = checkSpecialEvents(drawnCards);
         if (specialEventResult == -1) roundPhase2(drawnCards);
         else endRound(specialEventResult, drawnCards);
     }
 
-    private int checkSpecialEvents(Card cardA, Card cardB) {
-        Type typeA = cardA.getType();
-        Type typeB = cardB.getType();
+    private int checkSpecialEvents(List<Card> drawnCards) {
+        Type typeA = drawnCards.get(0).getType();
+        Type typeB = drawnCards.get(1).getType();
         if (typeA == Type.GOBLIN && typeB == Type.DRAGON) return 1;
         if (typeA == Type.DRAGON && typeB == Type.GOBLIN) return 0;
         if (typeA == Type.WIZARD && typeB == Type.ORK) return 0;
         if (typeA == Type.ORK && typeB == Type.WIZARD) return 1;
-        if (typeA == Type.KNIGHT && (typeB == Type.SPELL && cardB.getElement() == Element.WATER)) return 1;
-        if ((typeA == Type.SPELL && cardA.getElement() == Element.WATER) && typeB == Type.KNIGHT) return 0;
+        if (typeA == Type.KNIGHT && (typeB == Type.SPELL && drawnCards.get(1).getElement() == Element.WATER)) return 1;
+        if ((typeA == Type.SPELL && drawnCards.get(0).getElement() == Element.WATER) && typeB == Type.KNIGHT) return 0;
         if (typeA == Type.KRAKEN && typeB == Type.SPELL) return 0;
         if (typeA == Type.SPELL && typeB == Type.KRAKEN) return 1;
-        if (typeA == Type.DRAGON && (typeB == Type.ELV && cardB.getElement() == Element.FIRE)) return 1;
-        if ((typeA == Type.ELV && cardA.getElement() == Element.FIRE) && typeB == Type.DRAGON) return 0;
+        if (typeA == Type.DRAGON && (typeB == Type.ELV && drawnCards.get(1).getElement() == Element.FIRE)) return 1;
+        if ((typeA == Type.ELV && drawnCards.get(0).getElement() == Element.FIRE) && typeB == Type.DRAGON) return 0;
         return -1;
     }
 
     private void roundPhase2(List<Card> drawnCards) {
-        List<Integer> cardDamageAmounts = new ArrayList<>();
-        for (int i = 0; i < drawnCards.size(); i++) {
-            cardDamageAmounts.add(calculateElementalDamage(drawnCards.get(i), drawnCards.get((i+1)%drawnCards.size())));
-        }
 
-        int highestIndex = -1, highestDamage = Integer.MIN_VALUE;
-        for (int i = 0; i < drawnCards.size(); i++) {
-            if (cardDamageAmounts.get(i) > highestDamage) {
-                highestIndex = i;
-                highestDamage = cardDamageAmounts.get(i);
-            }
-        }
-        if (highestIndex == -1) {
-            System.out.println("something went wrong. abort round");
-            return;
-        }
+        System.out.println(String.format("Player 0: %d  --  Player 1: %d", drawnCards.get(0).getDamage(), drawnCards.get(1).getDamage()));
 
-        endRound(highestIndex, drawnCards);
+        int damageA = calculateElementalDamage(drawnCards.get(0), drawnCards.get(1));
+        int damageB = calculateElementalDamage(drawnCards.get(1), drawnCards.get(0));
+
+        System.out.println(String.format("Player 0: %d  --  Player 1: %d", damageA, damageB));
+
+        switch (Integer.signum(damageA - damageB)) {
+            case 1: endRound(0, drawnCards); break;
+            case 0: endRound(-1, drawnCards); break;
+            case -1: endRound(1, drawnCards); break;
+        }
     }
 
     private void endRound(int winnerIndex, List<Card> drawnCards) {
-        players.get(winnerIndex).getDeck().addCard(drawnCards);
-        System.out.println(String.format("Player %d won the round. %s + %s", winnerIndex, drawnCards.get(0).getCardName(), drawnCards.get(1).getCardName()));
+        if (winnerIndex == -1) {
+            System.out.println(String.format("Draw. %s + %s", drawnCards.get(0).getCardName(), drawnCards.get(1).getCardName()));
+            players.get(0).getDeck().addCard(drawnCards.get(0));
+            players.get(1).getDeck().addCard(drawnCards.get(1));
+        } else {
+            players.get(winnerIndex).getDeck().addCard(drawnCards);
+            System.out.println(String.format("Player %d won the round. %s + %s", winnerIndex, drawnCards.get(0).getCardName(), drawnCards.get(1).getCardName()));
+        }
+        System.out.println("------------------------");
     }
 
     private int checkLoser() {
@@ -113,6 +123,14 @@ public class Game {
     private int calculateElementalDamage(Card cardA, Card cardB) {
         float multiplicator = Constants.ELEMENT_MATRIX[castEleToInt(cardA.getElement())][castEleToInt(cardB.getElement())];
         return (int)(cardA.getDamage() * multiplicator);
+    }
+
+    private void finalizeGame(int loserIndex) {
+        switch (loserIndex) {
+            case -1: players.get(0).addCounter(); players.get(1).addCounter(); break;
+            case 0: players.get(0).addCounter(); players.get(1).addCounter(true); break;
+            case 1: players.get(0).addCounter(true); players.get(1).addCounter(); break;
+        }
     }
 
     private int castEleToInt(Element element) {

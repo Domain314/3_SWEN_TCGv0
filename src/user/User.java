@@ -7,8 +7,8 @@ public class User extends Player{
     String sessionID;
     int credits;
 
-    public User(int id, int gamesCounter, int winCounter, String userName, String sessionID, int credits) {
-        super(id, gamesCounter, winCounter);
+    public User(int id, int gamesCounter, int winCounter, int elo, String userName, String sessionID, int credits) {
+        super(id, gamesCounter, winCounter, elo);
         this.userName = userName;
         this.sessionID = sessionID;
         this.credits = credits;

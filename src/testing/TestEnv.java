@@ -14,7 +14,7 @@ import java.util.List;
 public class TestEnv {
     int userAmount = 2;
     int cardsPerStack = 20;
-    int testGamesMax = 5;
+    int testGamesMax = 30;
 
     public TestEnv() {
         initTestEnv();
@@ -28,7 +28,7 @@ public class TestEnv {
 
     private void genUsers() {
         for (int i = 0; i < userAmount; i++) {
-            User newUser = new User(1234 + i, 0, 0, String.format("dom%d", i), "abc123", 420);
+            User newUser = new User(1234 + i, 0, 0, 1500, String.format("Player%d", i), "abc123", 420);
             for (int j = 0; j < cardsPerStack; j++) {
                 Card newCard = CardGenerator.generateRandomCard();
                 Overseer.addCard(newCard);

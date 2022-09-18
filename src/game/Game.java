@@ -108,7 +108,6 @@ public class Game {
             players.get(winnerIndex).getDeck().addCard(drawnCards);
             System.out.println(String.format("Player %d won the round. %s + %s", winnerIndex, drawnCards.get(0).getCardName(), drawnCards.get(1).getCardName()));
         }
-        System.out.println("------------------------");
     }
 
     private int checkLoser() {
@@ -126,11 +125,16 @@ public class Game {
     }
 
     private void finalizeGame(int loserIndex) {
+        int eloChange = loserIndex == -1 ? 0 : Constants.EloChange(players.get((loserIndex+1)%2).getElo(), players.get(loserIndex).getElo());
+
         switch (loserIndex) {
-            case -1: players.get(0).addCounter(); players.get(1).addCounter(); break;
-            case 0: players.get(0).addCounter(); players.get(1).addCounter(true); break;
-            case 1: players.get(0).addCounter(true); players.get(1).addCounter(); break;
+            case -1: players.get(0).endGame(eloChange); players.get(1).endGame(eloChange); break;
+            case 0: players.get(0).endGame(-eloChange); players.get(1).endGame(eloChange, true); break;
+            case 1: players.get(0).endGame(eloChange, true); players.get(1).endGame(-eloChange); break;
         }
+
+        System.out.println(String.format("Player0 rating: %d\nPlayer1 rating: %d", players.get(0).getElo(), players.get(1).getElo()));
+        System.out.println("------------------------");
     }
 
     private int castEleToInt(Element element) {

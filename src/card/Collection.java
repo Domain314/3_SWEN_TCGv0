@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 abstract public class Collection {
-    List<Card> cards = new ArrayList<>();
+    private List<Card> cards = new ArrayList<>();
 
     public Collection() {
         System.out.println("new Collection made");

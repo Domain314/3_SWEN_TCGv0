@@ -13,26 +13,26 @@ import java.util.Collections;
 import java.util.List;
 
 public class TestEnv {
-    int userAmount = 10;
-    int cardsPerStack = 20;
-    int testGamesMax = 1;
-    int simulationsAmount = 1000;
+    private int userAmount = 10;
+    private int cardsPerStack = 20;
+    private int testGamesMax = 1;
+    private int simulationsAmount = 1000;
 
-    static String[] playerNamesPrefixes = {
+    private static String[] playerNamesPrefixes = {
             "Frog", "Dr", "Th3", "MindOf", "Kev", "Captain", "Edge", "Kohlrabi", "Alcohol", "Master", "Angel", "Killer",
             "Milf", "Clumsy", "Lucky", "Wild", "Warped", "Sniper", "Liquid", "Thanos", "Enko", "Crimson", "Weed", "Greedy",
             "Last", "Imaginary", "Manic", "Kendal", "RickN", "Edgy", "Drogo", "Atom", "Snap", "Web", "The", "Lost"};
-    static String[] playerNamesSuffixes = {
+    private static String[] playerNamesSuffixes = {
             "Milk", "Caring", "Th30d0r3", "Kevin", "K3v1n", "Smart", "Carmin", "Scare", "Squirrel", "Tolkien",
             "Diet", "Offensively", "Wild", "Sheriff", "German", "Kiyoshi", "Thanos", "Destroyer", "Maniac",
             "Life", "Image", "Flux", "NMorty", "Morty", "Karen", "Doggo", "A", "B", "Master", "Slayer"};
-    static String[] playerNums = {
+    private static String[] playerNums = {
             "420", "80", "81", "82", "83", "84", "85", "86", "87","88", "89", "90", "91", "92", "93", "94", "95", "96", "97", "98", "99",
             "123", "314", "3060", "360", "720", "1080", "007", "001", "1", "2", "3", "666", "999", "69", "6969",
             "2020", "2021", "2022", "3000", "4000", "5000", "6000", "9000", "2050"};
 
 //    Generate random NPC name, out of prefix, suffix and a number.
-    public String randomName() {
+    private String randomName() {
         return playerNamesPrefixes[Constants.RANDOM.nextInt(playerNamesPrefixes.length)] +
                 playerNamesSuffixes[Constants.RANDOM.nextInt(playerNamesSuffixes.length)] +
                 playerNums[Constants.RANDOM.nextInt(playerNums.length)];

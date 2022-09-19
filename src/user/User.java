@@ -3,9 +3,9 @@ package user;
 import card.Stack;
 
 public class User extends Player implements Comparable<User>{
-    String userName;
-    String sessionID;
-    int credits;
+    private String userName;
+    private String sessionID;
+    private int credits;
 
     public User(int id, int gamesCounter, int winCounter, int elo, String userName, String sessionID, int credits) {
         super(id, gamesCounter, winCounter, elo);

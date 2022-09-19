@@ -6,12 +6,12 @@ import card.Stack;
 import java.util.List;
 
 public class Player {
-    int id;
-    Deck deck;
-    Stack stack;
-    int gamesCounter;
-    int winCounter;
-    int elo;
+    private int id;
+    private Deck deck;
+    private Stack stack;
+    private int gamesCounter;
+    private int winCounter;
+    private int elo;
 
     public Player(int id, int gamesCounter, int winCounter, int elo) {
         this.id = id;

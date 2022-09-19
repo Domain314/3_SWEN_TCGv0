@@ -1,11 +1,11 @@
 package user;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Social {
-    int elo;
-    List<String> friends;
-    List<String> blocked;
-    List<String> transactionHistory;
-    List<String> gameHistory;
+    private List<String> friends = new ArrayList<>();
+    private List<String> blocked = new ArrayList<>();
+    private List<String> transactionHistory = new ArrayList<>();
+    private List<String> gameHistory = new ArrayList<>();
 }

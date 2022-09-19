@@ -1,12 +1,12 @@
 package card;
 
 public class Card {
-    int id;
-    String cardName;
-    String description;
-    int damage;
-    Type type;
-    Element element;
+    private int id;
+    private String cardName;
+    private String description;
+    private int damage;
+    private Type type;
+    private Element element;
 
     public int getID() { return id; }
     public String getCardName() { return cardName; }

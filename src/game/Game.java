@@ -94,7 +94,7 @@ public class Game {
         return -1;
     }
 
-//    Caluclate elemental Damage and end round.
+//    Calculate elemental Damage and end round.
 //    damageA - damageB => negative result = A smaller || => positive result = A greater || => result 0 = draw.
     private void roundPhase2(List<Card> drawnCards) {
 
